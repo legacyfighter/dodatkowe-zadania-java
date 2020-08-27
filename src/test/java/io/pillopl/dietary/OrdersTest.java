@@ -1,18 +1,22 @@
 package io.pillopl.dietary;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @Sql(scripts = {"/scripts/testdb.sql"})
-class DietaryApplicationTests {
+class OrdersTest {
 
 	@Autowired
 	private OrderService orderService;
@@ -78,6 +82,21 @@ class DietaryApplicationTests {
 		List<OrderDto> edwardSprzedawca = customerService.getIndividualOrdersForCustomer(10L);
 		assertEquals(1, edwardSprzedawca.size());
 
+	}
+
+	@Test
+	void testLogged() {
+		Authentication authentication = mock(Authentication.class);
+		Mockito.when(authenticationContextFacade.getAuthentication()).thenReturn(authentication);
+
+		Mockito.when(authentication.getName()).thenReturn("KATARZYNA");
+		List<OrderDto> katarzyna = orderService.getLoggedCustomerOrders(false);
+		assertEquals(2, katarzyna.size());
+		assertThrows(IllegalStateException.class, () -> orderService.getLoggedCustomerOrders(true));
+
+		Mockito.when(authentication.getName()).thenReturn("ZDROWO JEDZ");
+		List<OrderDto> zdrowoJedz = orderService.getLoggedCustomerOrders(true);
+		assertEquals(4, zdrowoJedz.size());
 	}
 
 }
