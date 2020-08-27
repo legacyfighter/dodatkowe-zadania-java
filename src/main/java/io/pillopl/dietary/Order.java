@@ -2,12 +2,19 @@ package io.pillopl.dietary;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "order_table")
 public class Order {
 
+    public List<OrderLine> getItems() {
+        return items;
+    }
 
+    public void setItems(List<OrderLine> items) {
+        this.items = items;
+    }
 
     enum OrderState {
         Initial, Paid, Delivered, Returned
@@ -28,8 +35,13 @@ public class Order {
     private OrderType orderType;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    //"zgrupowane" na widoku
     private CustomerOrderGroup customerOrderGroup;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<OrderLine> items;
+
+    @ManyToMany
+    private List<TaxRule> taxRules;
 
     private Instant confirmationTimestamp;
 
@@ -68,9 +80,14 @@ public class Order {
         this.customerOrderGroup = customerOrderGroup;
     }
 
+    public List<TaxRule> getTaxRules() {
+        return taxRules;
+    }
+
+    public void setTaxRules(List<TaxRule> taxRules) {
+        this.taxRules = taxRules;
+    }
+
 }
 
 
-class OrderLine {
-
-}

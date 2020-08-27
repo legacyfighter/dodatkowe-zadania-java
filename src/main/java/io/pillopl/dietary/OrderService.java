@@ -104,7 +104,9 @@ public class OrderService {
         String authentication = authenticationContextFacade.getAuthentication().getName();
         Customer c = customerRepository.findByName(authentication);
         if (includingSubordinates) {
-            return getOrdersIncludingSubordinates(c.getId());
+            if (!c.getType().equals(Customer.Type.Company) && !c.getType().equals(Customer.Type.Division)) {
+                throw new IllegalStateException("not a company nor division");
+            }            return getOrdersIncludingSubordinates(c.getId());
         } else {
             return customerService.getIndividualOrdersForCustomer(c.getId());
         }
