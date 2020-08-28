@@ -91,11 +91,5 @@ public class OldProduct {
         return desc + " *** " + longDesc;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
 
-    public int getCounter() {
-        return counter;
-    }
 }
