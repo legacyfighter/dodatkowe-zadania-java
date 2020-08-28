@@ -1,18 +1,19 @@
 package io.pillopl.leave;
 
-
 public class LeaveService {
 
     final LeaveDatabase database;
     final MessageBus messageBus;
     final EmailSender emailSender;
     final EscalationManager escalationManager;
+    final Configuration configuration;
 
-    LeaveService(LeaveDatabase database, MessageBus messageBus, EmailSender emailSender, EscalationManager escalationManager) {
+    LeaveService(LeaveDatabase database, MessageBus messageBus, EmailSender emailSender, EscalationManager escalationManager, Configuration configuration) {
         this.database = database;
         this.messageBus = messageBus;
         this.emailSender = emailSender;
         this.escalationManager = escalationManager;
+        this.configuration = configuration;
     }
 
     public Result requestPaidDaysOff(int days, Long employeeId) {
@@ -20,47 +21,69 @@ public class LeaveService {
             throw new IllegalArgumentException();
         }
 
-        Result result = null;
+        Employee employee = database.findByEmployeeId(employeeId);
 
-        Object[] employeeData = database.findByEmployeeId(employeeId);
+        Result result = employee.requestDaysOff(days);
 
-        String employeeStatus = (String) employeeData[0];
-        int daysSoFar = (Integer) employeeData[1];
+        if(result == Result.Manual) {
+            escalationManager.notifyNewPendingRequest(employeeId);
+        }
 
+        if (result == Result.Denied) {
+            emailSender.send("next time");
+        }
+
+        if (result == Result.Approved) {
+            messageBus.sendEvent("request approved");
+            database.save(employee);
+
+        }
+        return result;
+    }
+
+
+}
+
+class Employee {
+    private Long employeeId;
+    private String employeeStatus;
+    private int daysSoFar;
+
+    public Employee(Long employeeId, String employeeStatus, int daysSoFar) {
+        this.employeeId = employeeId;
+        this.employeeStatus = employeeStatus;
+        this.daysSoFar = daysSoFar;
+    }
+
+    public Result requestDaysOff(int days) {
         if (daysSoFar + days > 26) {
 
             if (employeeStatus.equals("PERFORMER") && daysSoFar + days < 45) {
-                result = Result.Manual;
-                escalationManager.notifyNewPendingRequest(employeeId);
+                return Result.Manual;
             } else {
-                result = Result.Denied;
-                emailSender.send("next time");
+                return Result.Denied;
             }
 
         } else {
 
             if (employeeStatus.equals("SLACKER")) {
-                result = Result.Denied;
-                emailSender.send("next time");
+                return Result.Denied;
             } else {
-                employeeData[1] = daysSoFar + days;
-                result = Result.Approved;
-                database.save(employeeData);
-                messageBus.sendEvent("request approved");
+                daysSoFar = daysSoFar + days;
+                return Result.Approved;
             }
         }
 
-        return result;
     }
 }
 
 class LeaveDatabase {
 
-    Object[] findByEmployeeId(Long employeeId) {
-        return new Object[0];
+    Employee findByEmployeeId(Long employeeId) {
+        return null;
     }
 
-    void save(Object[] employeeData) {
+    void save(Employee employeeData) {
 
     }
 }
