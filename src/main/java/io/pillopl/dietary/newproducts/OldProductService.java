@@ -16,18 +16,21 @@ public class OldProductService {
     @Autowired
     OldProductRepository oldProductRepository;
 
+    @Autowired
+    OldProductDescriptionRepository oldProductDescriptionRepository;
+
     public List<String> findAllDescriptions() {
         return
-                oldProductRepository
+                oldProductDescriptionRepository
                 .findAll()
                 .stream()
-                .map(OldProduct::formatDesc)
+                .map(OldProductDescription::formatDesc)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public void replaceCharInDesc(UUID productId, char oldChar, char newChar) {
-        OldProduct product = oldProductRepository.getOne(productId);
+        OldProductDescription product = oldProductDescriptionRepository.getOne(productId);
         product.replaceCharFromDesc(oldChar, newChar);
     }
 

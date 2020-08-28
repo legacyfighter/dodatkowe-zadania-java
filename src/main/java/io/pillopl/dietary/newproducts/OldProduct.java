@@ -52,10 +52,14 @@ public class OldProduct {
         }
     }
 
+    @Deprecated
+    // not public
     void replaceCharFromDesc(char charToReplace, char replaceWith) {
         desc = desc.replace(charToReplace, replaceWith);
     }
 
+    @Deprecated
+    // not public
     String formatDesc() {
         return desc.formatted();
     }
