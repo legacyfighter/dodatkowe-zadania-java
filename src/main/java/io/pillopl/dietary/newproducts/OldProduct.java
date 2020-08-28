@@ -1,17 +1,28 @@
 package io.pillopl.dietary.newproducts;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+@Entity
 public class OldProduct {
 
+    @Id
     private UUID serialNumber = UUID.randomUUID();
 
+    @Embedded
     private Price price;
 
+    @Embedded
     private Description desc;
 
+    @Embedded
     private Counter counter;
+
+    public OldProduct() {}
 
     public OldProduct(BigDecimal price, String desc, String longDesc, Integer counter) {
         this.price = Price.of(price);
@@ -56,15 +67,24 @@ public class OldProduct {
     int getCounter() {
         return counter.getIntValue();
     }
+
+    public UUID serialNumber() {
+        return serialNumber;
+    }
 }
 
+@Embeddable
 class Price {
+
 
     static Price of(BigDecimal value) {
         return new Price(value);
     }
 
-    private final BigDecimal price;
+
+    private  BigDecimal price;
+
+    private Price() { }
 
     private Price(BigDecimal price) {
         if (price == null || price.signum() < 0) {
@@ -83,10 +103,13 @@ class Price {
     }
 }
 
+@Embeddable
 class Description {
 
-    private final String desc;
-    private final String longDesc;
+    private String desc;
+    private String longDesc;
+
+    private Description() { }
 
     Description(String desc, String longDesc) {
         if (desc == null) {
@@ -111,13 +134,17 @@ class Description {
     }
 }
 
+@Embeddable
 class Counter {
 
     static Counter zero() {
         return new Counter(0);
     }
 
-    private final int counter;
+    private Counter() {
+    }
+
+    private int counter;
 
     Counter(int counter) {
         if (counter < 0) {
