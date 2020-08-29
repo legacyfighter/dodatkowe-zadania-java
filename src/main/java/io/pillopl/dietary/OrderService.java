@@ -117,10 +117,6 @@ public class OrderService {
     @Transactional
     public BigDecimal calculateTaxForOrder(Long orderId) {
         Order order = orderRepository.getOne(orderId);
-        BigDecimal initialValue = BigDecimal.ZERO;
-        for (TaxRule tax : order.getTaxRules()) {
-
-        }
-        return initialValue;
+        return new TaxRulesAggregation(order.getTaxRules()).calculate(BigDecimal.ZERO);
     }
 }

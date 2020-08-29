@@ -3,6 +3,7 @@ package io.pillopl.dietary;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Year;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -62,7 +63,7 @@ public class TaxRule {
 
     public BigDecimal calculate(BigDecimal x) {
         if (isLinear && aFactor != null && bFactor != null) {
-            return x.multiply(new BigDecimal(aFactor)).add(new BigDecimal(bFactor));
+            return (x.multiply(new BigDecimal(aFactor))).add(new BigDecimal(bFactor));
         }
         if (isSquare && aSquareFactor != null && bSquareFactor != null && cSuqreFactor != null) {
             return x.pow(2).multiply(new BigDecimal(aSquareFactor)).add((x.multiply(new BigDecimal(bSquareFactor)))).add(new BigDecimal(cSuqreFactor));
@@ -183,3 +184,19 @@ public class TaxRule {
 
 }
 
+class TaxRulesAggregation {
+
+    private final List<TaxRule> rules;
+
+    TaxRulesAggregation(List<TaxRule> rules) {
+        this.rules = rules;
+    }
+
+    BigDecimal calculate(BigDecimal x) {
+        BigDecimal result = BigDecimal.ZERO;
+        for (TaxRule taxRule : rules) {
+            result = result.add(taxRule.calculate(x));
+        }
+        return result;
+    }
+}
