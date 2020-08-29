@@ -119,12 +119,7 @@ public class OrderService {
         Order order = orderRepository.getOne(orderId);
         BigDecimal initialValue = BigDecimal.ZERO;
         for (TaxRule tax : order.getTaxRules()) {
-            if (tax.isLinear() && tax.getaFactor() != null && tax.getbFactor() != null) {
-                initialValue = initialValue.multiply(new BigDecimal(tax.getaFactor())).add(new BigDecimal(tax.getbFactor()));
-            }
-            if (tax.isSquare() && tax.getbSquareFactor() != null && tax.getaSquareFactor() != null && tax.getcSuqreFactor() != null) {
-                initialValue = initialValue.pow(2).multiply(new BigDecimal(tax.getaSquareFactor())).add((initialValue.multiply(new BigDecimal(tax.getbFactor())))).add(new BigDecimal(tax.getcSuqreFactor()));
-            }
+
         }
         return initialValue;
     }

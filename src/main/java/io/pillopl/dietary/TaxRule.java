@@ -1,6 +1,8 @@
 package io.pillopl.dietary;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.Year;
 import java.util.Objects;
 
 @Entity
@@ -30,75 +32,42 @@ public class TaxRule {
     private TaxConfig taxConfig;
 
     public static TaxRule linearRule(int a, int b, String taxCode) {
-        TaxRule rule = new TaxRule();
-        rule.setLinear(true);
-        rule.setTaxCode(taxCode);
-        rule.setaFactor(a);
-        rule.setbSquareFactor(b);
-        rule.setTaxCode(taxCode);
-        return rule;
+        if (a == 0) {
+            throw new IllegalStateException("Invalid aFactor");
+
+        }
+        int year = Year.now().getValue();
+        return new TaxRuleBuilder()
+                .withIsLinear(true)
+                .withAFactor(a)
+                .withBFactor(b)
+                .withTaxCode("A. 899. " + year + taxCode)
+                .build();
+    }
+
+    public static TaxRule squareRule(int a, int b, int c, String taxCode) {
+        if (a == 0) {
+            throw new IllegalStateException("Invalid aFactor");
+        }
+        int year = Year.now().getValue();
+        return new TaxRuleBuilder()
+                .withIsSquare(true)
+                .withASquareFactor(a)
+                .withBSquareFactor(b)
+                .withCSuqreFactor(c)
+                .withTaxCode("A. 899. " + year + taxCode)
+                .build();
     }
 
 
-
-    public boolean isLinear() {
-        return isLinear;
-    }
-
-    public void setLinear(boolean linear) {
-        isLinear = linear;
-    }
-
-    public Integer getaFactor() {
-        return aFactor;
-    }
-
-    public void setaFactor(int aFactor) {
-        this.aFactor = aFactor;
-    }
-
-    public Integer getbFactor() {
-        return bFactor;
-    }
-
-    public void setbFactor(int bFactor) {
-        this.bFactor = bFactor;
-    }
-
-    public boolean isSquare() {
-        return isSquare;
-    }
-
-    public void setSquare(boolean square) {
-        isSquare = square;
-    }
-
-    public Integer getaSquareFactor() {
-        return aSquareFactor;
-    }
-
-    public void setaSquareFactor(int aSquareFactor) {
-        this.aSquareFactor = aSquareFactor;
-    }
-
-    public Integer getbSquareFactor() {
-        return bSquareFactor;
-    }
-
-    public void setbSquareFactor(int bSquareFactor) {
-        this.bSquareFactor = bSquareFactor;
-    }
-
-    public Integer getcSuqreFactor() {
-        return cSuqreFactor;
-    }
-
-    public void setcSuqreFactor(int cSuqreFactor) {
-        this.cSuqreFactor = cSuqreFactor;
-    }
-
-    public void setTaxCode(String taxCode) {
-        this.taxCode = taxCode;
+    public BigDecimal calculate(BigDecimal x) {
+        if (isLinear && aFactor != null && bFactor != null) {
+            return x.multiply(new BigDecimal(aFactor)).add(new BigDecimal(bFactor));
+        }
+        if (isSquare && aSquareFactor != null && bSquareFactor != null && cSuqreFactor != null) {
+            return x.pow(2).multiply(new BigDecimal(aSquareFactor)).add((x.multiply(new BigDecimal(bSquareFactor)))).add(new BigDecimal(cSuqreFactor));
+        }
+        return x;
     }
 
     @Override
@@ -126,4 +95,91 @@ public class TaxRule {
     public Long getId() {
         return id;
     }
+
+    public static final class TaxRuleBuilder {
+        private Long id;
+        private String taxCode;
+        private boolean isLinear;
+        private Integer aFactor;
+        private Integer bFactor;
+        private boolean isSquare;
+        private Integer aSquareFactor;
+        private Integer bSquareFactor;
+        private Integer cSuqreFactor;
+        private TaxConfig taxConfig;
+
+        private TaxRuleBuilder() {
+        }
+
+        public static TaxRuleBuilder aTaxRule() {
+            return new TaxRuleBuilder();
+        }
+
+        public TaxRuleBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public TaxRuleBuilder withTaxCode(String taxCode) {
+            this.taxCode = taxCode;
+            return this;
+        }
+
+        public TaxRuleBuilder withIsLinear(boolean isLinear) {
+            this.isLinear = isLinear;
+            return this;
+        }
+
+        public TaxRuleBuilder withAFactor(Integer aFactor) {
+            this.aFactor = aFactor;
+            return this;
+        }
+
+        public TaxRuleBuilder withBFactor(Integer bFactor) {
+            this.bFactor = bFactor;
+            return this;
+        }
+
+        public TaxRuleBuilder withIsSquare(boolean isSquare) {
+            this.isSquare = isSquare;
+            return this;
+        }
+
+        public TaxRuleBuilder withASquareFactor(Integer aSquareFactor) {
+            this.aSquareFactor = aSquareFactor;
+            return this;
+        }
+
+        public TaxRuleBuilder withBSquareFactor(Integer bSquareFactor) {
+            this.bSquareFactor = bSquareFactor;
+            return this;
+        }
+
+        public TaxRuleBuilder withCSuqreFactor(Integer cSuqreFactor) {
+            this.cSuqreFactor = cSuqreFactor;
+            return this;
+        }
+
+        public TaxRuleBuilder withTaxConfig(TaxConfig taxConfig) {
+            this.taxConfig = taxConfig;
+            return this;
+        }
+
+        public TaxRule build() {
+            TaxRule taxRule = new TaxRule();
+            taxRule.cSuqreFactor = this.cSuqreFactor;
+            taxRule.id = this.id;
+            taxRule.isSquare = this.isSquare;
+            taxRule.bFactor = this.bFactor;
+            taxRule.aSquareFactor = this.aSquareFactor;
+            taxRule.taxCode = this.taxCode;
+            taxRule.aFactor = this.aFactor;
+            taxRule.taxConfig = this.taxConfig;
+            taxRule.isLinear = this.isLinear;
+            taxRule.bSquareFactor = this.bSquareFactor;
+            return taxRule;
+        }
+    }
+
 }
+
