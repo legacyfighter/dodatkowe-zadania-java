@@ -67,6 +67,7 @@ public class TaxRuleService {
         taxConfig.getTaxRules().add(taxRule);
         taxConfig.setCurrentRulesCount(taxConfig.getTaxRules().size());
         taxConfig.setMaxRulesCount(10);
+        taxConfig.setLastModifiedDate(Instant.now());
         if (countryCode == null || countryCode.equals("") || countryCode.length() == 1) {
             throw new IllegalStateException("Invalid country code");
         }
@@ -110,6 +111,7 @@ public class TaxRuleService {
             taxRuleRepository.delete(taxRule);
             taxConfig.getTaxRules().remove(taxRule);
             taxConfig.setCurrentRulesCount(taxConfig.getCurrentRulesCount() - 1);
+            taxConfig.setLastModifiedDate(Instant.now());
         }
 
     }
