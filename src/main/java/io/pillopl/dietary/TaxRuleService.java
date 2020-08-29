@@ -95,7 +95,8 @@ public class TaxRuleService {
             createTaxConfigWithRule(countryCode, taxRule);
         }
         taxConfig.getTaxRules().add(taxRule);
-    }
+        taxConfig.setCurrentRulesCount(taxConfig.getCurrentRulesCount() + 1);
+        taxConfig.setLastModifiedDate(Instant.now());    }
 
     @Transactional
     public void deleteRule(Long taxRuleId) {
