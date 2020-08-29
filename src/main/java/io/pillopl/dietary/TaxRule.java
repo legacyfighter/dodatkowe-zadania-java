@@ -29,13 +29,17 @@ public class TaxRule {
     @ManyToOne
     private TaxConfig taxConfig;
 
-    public TaxConfig getTaxConfig() {
-        return taxConfig;
+    public static TaxRule linearRule(int a, int b, String taxCode) {
+        TaxRule rule = new TaxRule();
+        rule.setLinear(true);
+        rule.setTaxCode(taxCode);
+        rule.setaFactor(a);
+        rule.setbSquareFactor(b);
+        rule.setTaxCode(taxCode);
+        return rule;
     }
 
-    public void setTaxConfig(TaxConfig taxConfig) {
-        this.taxConfig = taxConfig;
-    }
+
 
     public boolean isLinear() {
         return isLinear;
@@ -99,19 +103,27 @@ public class TaxRule {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaxRule taxRule = (TaxRule) o;
-        return taxCode.equals(taxRule.taxCode);
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TaxRule)) {
+            return false;
+        }
+        TaxRule that = (TaxRule) o;
+        return taxCode.equals(that.getTaxCode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(taxCode);
     }
 
 
     public String getTaxCode() {
         return taxCode;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
