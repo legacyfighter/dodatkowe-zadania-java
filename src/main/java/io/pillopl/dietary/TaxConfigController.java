@@ -17,15 +17,25 @@ public class TaxConfigController {
     @Autowired
     private TaxRuleService taxRuleService;
 
+    @Autowired
+    TaxRuleRepository taxRuleRepository;
+
     @GetMapping("/config")
+    @Transactional
     public Map<String, List<TaxRule>> taxConfigs() {
+
         List<TaxConfig> taxConfigs = taxRuleService.findAllConfigs();
 
         Map<String, List<TaxRule>> map = new HashMap<>();
         for (TaxConfig tax : taxConfigs) {
             if (map.get(tax.getCountryCode()) == null) {
 
-                map.put(tax.getCountryCode(), new ArrayList<>());
+                if(tax.getTaxRules() == null) {
+                    map.put(tax.getCountryCode(), new ArrayList<>());
+                } else {
+                    map.put(tax.getCountryCode(), new ArrayList<>(tax.getTaxRules()));
+
+                }
 
 
             } else {

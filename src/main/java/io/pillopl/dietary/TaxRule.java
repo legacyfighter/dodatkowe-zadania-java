@@ -29,7 +29,12 @@ public class TaxRule {
     private Integer bSquareFactor;
     private Integer cSuqreFactor;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "config_id",
+            referencedColumnName = "id"
+    )
     private TaxConfig taxConfig;
 
     public static TaxRule linearRule(int a, int b, String taxCode) {
@@ -95,6 +100,10 @@ public class TaxRule {
 
     public Long getId() {
         return id;
+    }
+
+    public void setTaxConfig(TaxConfig taxConfig) {
+        this.taxConfig = taxConfig;
     }
 
     public static final class TaxRuleBuilder {
@@ -181,6 +190,11 @@ public class TaxRule {
             return taxRule;
         }
     }
+
+    public TaxConfig getTaxConfig() {
+        return taxConfig;
+    }
+
 
 }
 

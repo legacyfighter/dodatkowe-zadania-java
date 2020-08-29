@@ -22,7 +22,7 @@ public class TaxConfig {
     private int currentRulesCount;
     private int maxRulesCount;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taxConfig")
     private List<TaxRule> taxRules = new ArrayList<>(); //usuwanieo z lastModifiedDate + liczniki,
 
     public TaxConfig(String countryCode, int maxRules, TaxRule aTaxRuleWithParams) {
@@ -73,6 +73,7 @@ public class TaxConfig {
         if (maxRulesCount <= currentRulesCount) {
             throw new IllegalStateException("Too many rules");
         }
+        taxRule.setTaxConfig(this);
         taxRules.add(taxRule);
         currentRulesCount++;
         lastModifiedDate = Instant.now();
