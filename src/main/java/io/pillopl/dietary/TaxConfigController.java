@@ -24,10 +24,8 @@ public class TaxConfigController {
         Map<String, List<TaxRule>> map = new HashMap<>();
         for (TaxConfig tax : taxConfigs) {
             if (map.get(tax.getCountryCode()) == null) {
-                if (tax.getTaxRules() == null) {
-                    tax.setTaxRules(new ArrayList<>());
-                }
-                map.put(tax.getCountryCode(), tax.getTaxRules());
+
+                map.put(tax.getCountryCode(), new ArrayList<>());
 
 
             } else {

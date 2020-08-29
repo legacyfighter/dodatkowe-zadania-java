@@ -116,15 +116,11 @@ class TaxRuleServiceTest {
     }
 
     TaxConfig configBy(String countryCode) {
-        return taxConfigRepository.findByCountryCode(countryCode);
+        return taxConfigRepository.findByCountryCode(CountryCode.of(countryCode));
     }
 
     TaxConfig newConfigWithRuleAndMaxRules(String countryCode, int maxRules, TaxRule aTaxRuleWithParams) {
-        TaxConfig taxConfig = new TaxConfig();
-        taxConfig.setCountryCode(countryCode);
-        taxConfig.setCurrentRulesCount(1);
-        taxConfig.setMaxRulesCount(maxRules);
-        taxConfig.setTaxRules(List.of(aTaxRuleWithParams));
+        TaxConfig taxConfig = new TaxConfig(countryCode, maxRules, aTaxRuleWithParams);
         return taxConfigRepository.save(taxConfig);
     }
 
