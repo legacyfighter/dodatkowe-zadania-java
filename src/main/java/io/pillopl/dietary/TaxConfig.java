@@ -2,6 +2,7 @@ package io.pillopl.dietary;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,13 +16,11 @@ public class TaxConfig {
     private String countryReason;
     private String countryCode;
     private Instant lastModifiedDate;
-    private String modifiedBy;
     private int currentRulesCount;
     private int maxRulesCount;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<TaxRule> taxRules; //usuwanieo z lastModifiedDate + liczniki,
-
+    private List<TaxRule> taxRules = new ArrayList<>(); //usuwanieo z lastModifiedDate + liczniki,
 
     public String getDescription() {
         return description;
@@ -55,13 +54,6 @@ public class TaxConfig {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
 
     public int getCurrentRulesCount() {
         return currentRulesCount;

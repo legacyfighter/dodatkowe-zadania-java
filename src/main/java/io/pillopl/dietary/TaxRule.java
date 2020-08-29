@@ -18,13 +18,13 @@ public class TaxRule {
     private String taxCode;
 
     private boolean isLinear;
-    private int aFactor;
-    private int bFactor;
+    private Integer aFactor;
+    private Integer bFactor;
 
     private boolean isSquare;
-    private int aSquareFactor;
-    private int bSquareFactor;
-    private int cSuqreFactor;
+    private Integer aSquareFactor;
+    private Integer bSquareFactor;
+    private Integer cSuqreFactor;
 
     @ManyToOne
     private TaxConfig taxConfig;
@@ -45,7 +45,7 @@ public class TaxRule {
         isLinear = linear;
     }
 
-    public int getaFactor() {
+    public Integer getaFactor() {
         return aFactor;
     }
 
@@ -53,7 +53,7 @@ public class TaxRule {
         this.aFactor = aFactor;
     }
 
-    public int getbFactor() {
+    public Integer getbFactor() {
         return bFactor;
     }
 
@@ -69,7 +69,7 @@ public class TaxRule {
         isSquare = square;
     }
 
-    public int getaSquareFactor() {
+    public Integer getaSquareFactor() {
         return aSquareFactor;
     }
 
@@ -77,7 +77,7 @@ public class TaxRule {
         this.aSquareFactor = aSquareFactor;
     }
 
-    public int getbSquareFactor() {
+    public Integer getbSquareFactor() {
         return bSquareFactor;
     }
 
@@ -85,7 +85,7 @@ public class TaxRule {
         this.bSquareFactor = bSquareFactor;
     }
 
-    public int getcSuqreFactor() {
+    public Integer getcSuqreFactor() {
         return cSuqreFactor;
     }
 

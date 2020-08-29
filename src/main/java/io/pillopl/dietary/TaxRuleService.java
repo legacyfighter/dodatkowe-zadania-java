@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.time.Year;
 import java.util.List;
 
@@ -38,7 +39,15 @@ public class TaxRuleService {
         TaxConfig taxConfig = taxConfigRepository.findByCountryCode(countryCode);
         if (taxConfig == null) {
             taxConfig = createTaxConfigWithRule(countryCode, taxRule);
+            return;
         }
+        if(taxConfig.getMaxRulesCount() <= taxConfig.getTaxRules().size()) {
+            throw new IllegalStateException("Too many rules");
+        }
+
+        taxConfig.getTaxRules().add(taxRule);
+        taxConfig.setCurrentRulesCount(taxConfig.getCurrentRulesCount() + 1);
+        taxConfig.setLastModifiedDate(Instant.now());
 
         List<Order> byOrderState = orderRepository.findByOrderState(Order.OrderState.Initial);
 
@@ -57,6 +66,7 @@ public class TaxRuleService {
         taxConfig.setCountryCode(countryCode);
         taxConfig.getTaxRules().add(taxRule);
         taxConfig.setCurrentRulesCount(taxConfig.getTaxRules().size());
+        taxConfig.setMaxRulesCount(10);
         if (countryCode == null || countryCode.equals("") || countryCode.length() == 1) {
             throw new IllegalStateException("Invalid country code");
         }
@@ -84,6 +94,7 @@ public class TaxRuleService {
         if (taxConfig == null) {
             createTaxConfigWithRule(countryCode, taxRule);
         }
+        taxConfig.getTaxRules().add(taxRule);
     }
 
     @Transactional

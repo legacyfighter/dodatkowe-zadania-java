@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -106,9 +107,25 @@ public class OrderService {
         if (includingSubordinates) {
             if (!c.getType().equals(Customer.Type.Company) && !c.getType().equals(Customer.Type.Division)) {
                 throw new IllegalStateException("not a company nor division");
-            }            return getOrdersIncludingSubordinates(c.getId());
+            }
+            return getOrdersIncludingSubordinates(c.getId());
         } else {
             return customerService.getIndividualOrdersForCustomer(c.getId());
         }
+    }
+
+    @Transactional
+    public BigDecimal calculateTaxForOrder(Long orderId) {
+        Order order = orderRepository.getOne(orderId);
+        BigDecimal initialValue = BigDecimal.ZERO;
+        for (TaxRule tax : order.getTaxRules()) {
+            if (tax.isLinear() && tax.getaFactor() != null && tax.getbFactor() != null) {
+                initialValue = initialValue.multiply(new BigDecimal(tax.getaFactor())).add(new BigDecimal(tax.getbFactor()));
+            }
+            if (tax.isSquare() && tax.getbSquareFactor() != null && tax.getaSquareFactor() != null && tax.getcSuqreFactor() != null) {
+                initialValue = initialValue.pow(2).multiply(new BigDecimal(tax.getaSquareFactor())).add((initialValue.multiply(new BigDecimal(tax.getbFactor())))).add(new BigDecimal(tax.getcSuqreFactor()));
+            }
+        }
+        return initialValue;
     }
 }
