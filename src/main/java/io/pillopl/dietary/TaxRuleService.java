@@ -77,6 +77,22 @@ public class TaxRuleService {
     }
 
     @Transactional
+    public TaxConfig createTaxConfigWithRule(String countryCode, int maxRulesCount, TaxRule taxRule) {
+        TaxConfig taxConfig = new TaxConfig();
+        taxConfig.setCountryCode(countryCode);
+        taxConfig.getTaxRules().add(taxRule);
+        taxConfig.setCurrentRulesCount(taxConfig.getTaxRules().size());
+        taxConfig.setMaxRulesCount(maxRulesCount);
+        taxConfig.setLastModifiedDate(Instant.now());
+        if (countryCode == null || countryCode.equals("") || countryCode.length() == 1) {
+            throw new IllegalStateException("Invalid country code");
+        }
+
+        taxConfigRepository.save(taxConfig);
+        return taxConfig;
+    }
+
+    @Transactional
     public void addTaxRuleToCountry(String countryCode, int aFactor, int bFactor, int cFactor, String taxCode) {
         if (aFactor == 0) {
             throw new IllegalStateException("Invalid aFactor");
