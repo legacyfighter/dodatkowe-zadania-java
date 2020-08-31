@@ -25,9 +25,10 @@ public class TaxConfigController {
         for (TaxConfig tax : taxConfigs) {
             if (map.get(tax.getCountryCode()) == null) {
                 if (tax.getTaxRules() == null) {
-                    tax.setTaxRules(new ArrayList<>());
+                    map.put(tax.getCountryCode(), new ArrayList<>());
+                } else {
+                    map.put(tax.getCountryCode(), tax.getTaxRules());
                 }
-                map.put(tax.getCountryCode(), tax.getTaxRules());
 
 
             } else {
