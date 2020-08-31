@@ -115,6 +115,15 @@ public class TaxRuleService {
 
     }
 
+    @Transactional
+    public List<TaxRule> findRules(String countryCode) {
+        return taxConfigRepository.findByCountryCode(countryCode).getTaxRules();
+    }
+
+    @Transactional
+    public int rulesCount(String countryCode) {
+        return taxConfigRepository.findByCountryCode(countryCode).getCurrentRulesCount();
+    }
 
     public List<TaxConfig> findAllConfigs() {
         return taxConfigRepository.findAll();
