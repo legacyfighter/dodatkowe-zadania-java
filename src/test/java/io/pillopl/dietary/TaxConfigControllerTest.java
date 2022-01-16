@@ -12,7 +12,7 @@ import static io.pillopl.dietary.TaxRule.squareRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class TaxRuleControllerTest {
+class TaxConfigControllerTest {
 
     String countryCode = "country-code";
     String countryCode2 = "country-code2";
