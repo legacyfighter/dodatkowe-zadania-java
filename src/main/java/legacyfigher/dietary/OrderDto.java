@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import java.time.Instant;
 import java.util.Objects;

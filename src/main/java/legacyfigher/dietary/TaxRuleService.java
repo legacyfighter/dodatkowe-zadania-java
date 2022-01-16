@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

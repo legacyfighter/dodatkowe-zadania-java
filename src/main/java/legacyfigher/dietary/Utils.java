@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

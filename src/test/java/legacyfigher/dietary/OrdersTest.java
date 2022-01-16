@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

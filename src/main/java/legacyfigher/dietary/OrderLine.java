@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

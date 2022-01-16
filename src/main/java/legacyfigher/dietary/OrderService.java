@@ -1,8 +1,6 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.SecurityContextProvider;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

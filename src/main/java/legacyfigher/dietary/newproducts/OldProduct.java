@@ -1,4 +1,4 @@
-package io.pillopl.dietary.newproducts;
+package legacyfigher.dietary.newproducts;
 
 import java.math.BigDecimal;
 import java.util.UUID;

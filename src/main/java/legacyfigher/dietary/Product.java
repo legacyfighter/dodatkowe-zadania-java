@@ -1,4 +1,4 @@
-package io.pillopl.dietary;
+package legacyfigher.dietary;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
