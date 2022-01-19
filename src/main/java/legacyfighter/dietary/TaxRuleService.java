@@ -127,6 +127,7 @@ public class TaxRuleService {
             taxRuleRepository.delete(taxRule);
             taxConfig.getTaxRules().remove(taxRule);
             taxConfig.setLastModifiedDate(Instant.now());
+            taxConfig.setCurrentRulesCount(taxConfig.getCurrentRulesCount() - 1);
         }
 
     }
