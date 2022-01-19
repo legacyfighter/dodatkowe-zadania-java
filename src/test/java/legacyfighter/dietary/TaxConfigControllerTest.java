@@ -12,8 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class TaxConfigControllerTest {
 
-    String countryCode = "country-code";
-    String countryCode2 = "country-code2";
+    String countryCode = "_country-code";
+    String countryCode2 = "_country-code2";
 
     @Autowired
     TaxRuleService taxRuleService;
@@ -27,11 +27,11 @@ class TaxConfigControllerTest {
     @Test
     void shouldReturnCorrectMapOfConfigs() {
         //given
-        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.linearRule(1, 6, "_tax-code1"));
+        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.linearRule(1, 6, "tax1"));
         //and
-        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.squareRule(1, 5, 6, "_tax-code2"));
+        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.squareRule(1, 5, 6, "tax2"));
         //and
-        newConfigWithRuleAndMaxRules(countryCode2, 2, TaxRule.linearRule(1, 6, "_tax-code3"));
+        newConfigWithRuleAndMaxRules(countryCode2, 2, TaxRule.linearRule(1, 6, "tax3"));
 
 
 
@@ -40,16 +40,11 @@ class TaxConfigControllerTest {
         Map<String, List<TaxRule>> configMap = taxConfigController.taxConfigs();
         assertThat(configMap.entrySet()).size().isEqualTo(2);
         assertThat(configMap.get(countryCode)).size().isEqualTo(2);
-        assertThat(configMap.get(countryCode)).contains(TaxRule.linearRule(1, 6, "tax-code1"));
-        assertThat(configMap.get(countryCode)).contains(TaxRule.squareRule(1, 5, 6, "tax-code2"));
+        assertThat(configMap.get(countryCode)).contains(TaxRule.linearRule(1, 6, "tax1"));
+        assertThat(configMap.get(countryCode)).contains(TaxRule.squareRule(1, 5, 6, "tax2"));
 
         assertThat(configMap.get(countryCode2)).size().isEqualTo(1);
-        assertThat(configMap.get(countryCode2)).contains(TaxRule.squareRule(1, 5, 6, "tax-code3"));
-    }
-
-
-    TaxConfig configBy(String countryCode) {
-        return taxConfigRepository.findByCountryCode(CountryCode.of(countryCode));
+        assertThat(configMap.get(countryCode2)).contains(TaxRule.squareRule(1, 5, 6, "tax3"));
     }
 
     TaxConfig newConfigWithRuleAndMaxRules(String countryCode, int maxRules, TaxRule aTaxRuleWithParams) {
