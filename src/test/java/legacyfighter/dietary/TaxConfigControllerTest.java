@@ -27,11 +27,11 @@ class TaxConfigControllerTest {
     @Test
     void shouldReturnCorrectMapOfConfigs() {
         //given
-        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.linearRule(1, 6, "tax-code1"));
+        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.linearRule(1, 6, "_tax-code1"));
         //and
-        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.squareRule(1, 5, 6, "tax-code2"));
+        newConfigWithRuleAndMaxRules(countryCode, 2, TaxRule.squareRule(1, 5, 6, "_tax-code2"));
         //and
-        newConfigWithRuleAndMaxRules(countryCode2, 2, TaxRule.linearRule(1, 6, "tax-code3"));
+        newConfigWithRuleAndMaxRules(countryCode2, 2, TaxRule.linearRule(1, 6, "_tax-code3"));
 
 
 
